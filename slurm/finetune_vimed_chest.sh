@@ -7,7 +7,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=64G
-#SBATCH --gpus=h100:1
+#SBATCH --gpus=H100:1
 
 set -euo pipefail
 
