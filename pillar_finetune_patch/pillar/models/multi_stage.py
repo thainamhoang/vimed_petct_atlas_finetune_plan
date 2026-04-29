@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import importlib
 import warnings
 from torch import nn
 
@@ -15,6 +16,17 @@ def resolve_model_class(name):
         return heads.__dict__[name]
     if name in pooling.__dict__:
         return pooling.__dict__[name]
+    direct_imports = (
+        "pillar.models.heads.basic",
+        "pillar.models.heads.cumulative_hazard_layer",
+        "pillar.models.heads.detr",
+        "pillar.models.pooling",
+        "pillar.models.backbones",
+    )
+    for module_name in direct_imports:
+        module = importlib.import_module(module_name)
+        if hasattr(module, name):
+            return getattr(module, name)
     raise KeyError(name)
 
 
