@@ -49,7 +49,7 @@ dataloader:
   class_bal: False
   train_drop_last: False
   val_drop_last: False
-  multi_gpu_eval: True
+  multi_gpu_eval: False
   persistent_workers: False
   prefetch_factor: null
   clip_grad: null

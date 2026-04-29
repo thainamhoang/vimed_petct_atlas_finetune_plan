@@ -20,5 +20,6 @@ cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/models/backbones/mmatlas.py" "${PI
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/metrics/multilabel.py" "${PILLAR_ROOT}/pillar/metrics/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/metrics/__init__.py" "${PILLAR_ROOT}/pillar/metrics/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/configs/vimed_chest_petct_atlas.yaml" "${PILLAR_ROOT}/configs/"
+cp "${PLAN_ROOT}/pillar_finetune_patch/scripts/train.py" "${PILLAR_ROOT}/scripts/"
 
 echo "Applied ViMED chest PET/CT patch into ${PILLAR_ROOT}"
