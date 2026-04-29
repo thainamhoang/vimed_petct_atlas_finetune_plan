@@ -1,0 +1,110 @@
+{
+  "labels": [
+    {
+      "name": "abnormal_fdg_uptake",
+      "positive": [
+        "\\babnormal\\b.{0,40}\\bfdg\\b",
+        "\\bfocal\\b.{0,40}\\bfdg\\b",
+        "\\bincreased\\b.{0,30}\\bfdg\\b",
+        "\\bfdg[- ]avid\\b",
+        "\\bsuvmax\\b"
+      ],
+      "negative": [
+        "\\bno\\b.{0,40}\\babnormal\\b.{0,40}\\bfdg\\b",
+        "\\bno\\b.{0,40}\\bfocal\\b.{0,40}\\bfdg\\b",
+        "\\bwithout\\b.{0,30}\\bincreased\\b.{0,30}\\bfdg\\b",
+        "\\bnon[- ]fdg[- ]avid\\b",
+        "\\bfdg[- ]non[- ]avid\\b"
+      ],
+      "mode": "positive_unless_only_negative"
+    },
+    {
+      "name": "lymph_node",
+      "positive": [
+        "\\blymph node",
+        "\\blymph nodes",
+        "\\bnodes\\b",
+        "\\bmediastinal\\b",
+        "\\baxillary\\b",
+        "\\bhilar\\b",
+        "\\bparatracheal\\b",
+        "\\bsubcarinal\\b",
+        "\\bcervical\\b",
+        "\\binguinal\\b"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    },
+    {
+      "name": "mass_or_nodule",
+      "positive": [
+        "\\bmass\\b",
+        "\\bnodule\\b",
+        "\\bnodules\\b",
+        "\\bopacity\\b",
+        "\\blesion\\b",
+        "\\btumou?r\\b",
+        "\\bthickening\\b"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    },
+    {
+      "name": "metastasis_or_recurrence",
+      "positive": [
+        "\\bmetasta",
+        "\\brecurr",
+        "\\bsecondary\\b",
+        "\\binvasion\\b",
+        "\\binvading\\b"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    },
+    {
+      "name": "inflammation_or_hyperplasia",
+      "positive": [
+        "\\binflamm",
+        "\\bhyperplasia\\b",
+        "\\bphysiological\\b",
+        "\\breactive\\b",
+        "\\bfibrosis\\b"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    },
+    {
+      "name": "suv_mentioned",
+      "positive": [
+        "\\bsuv\\b",
+        "\\bsuvmax\\b",
+        "\\bsuv\\s*[:=]?",
+        "\\bsuvmax\\s*[:=]?"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    },
+    {
+      "name": "effusion_or_fluid",
+      "positive": [
+        "\\beffusion\\b",
+        "\\bfluid\\b",
+        "\\bpleural effusion\\b",
+        "\\bpericardial effusion\\b"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    },
+    {
+      "name": "no_abnormal_fdg",
+      "positive": [
+        "\\bno\\b.{0,40}\\babnormal\\b.{0,40}\\bfdg\\b",
+        "\\bno\\b.{0,40}\\bfocal\\b.{0,40}\\bfdg\\b",
+        "\\bno abnormal focal fdg\\b",
+        "\\bno focal abnormal fdg\\b"
+      ],
+      "negative": [],
+      "mode": "any_positive"
+    }
+  ]
+}
