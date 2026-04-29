@@ -16,7 +16,7 @@ log() {
 }
 
 module load cuda
-module load miniforge3
+module load miniforge3 dev2025a cmake cuda h100
 
 eval "$(mamba shell hook --shell bash)"
 mamba activate runai
