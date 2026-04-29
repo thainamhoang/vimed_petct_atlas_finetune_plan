@@ -13,6 +13,8 @@ cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/datasets/vimed_petct.py" "${PILLAR
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/datasets/__init__.py" "${PILLAR_ROOT}/pillar/datasets/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/engines/base.py" "${PILLAR_ROOT}/pillar/engines/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/engines/classifier.py" "${PILLAR_ROOT}/pillar/engines/"
+cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/losses/multilabel.py" "${PILLAR_ROOT}/pillar/losses/"
+cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/losses/__init__.py" "${PILLAR_ROOT}/pillar/losses/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/models/multi_stage.py" "${PILLAR_ROOT}/pillar/models/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/models/backbones/mmatlas.py" "${PILLAR_ROOT}/pillar/models/backbones/"
 cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/metrics/multilabel.py" "${PILLAR_ROOT}/pillar/metrics/"
