@@ -15,11 +15,14 @@ log() {
   echo "[$(date)] $*"
 }
 
-module load cuda
 module load miniforge3 dev2025a cmake cuda h100
 
 eval "$(mamba shell hook --shell bash)"
 mamba activate runai
+
+export CUDA_HOME=$(dirname $(dirname $(which nvcc)))
+export PATH="$CUDA_HOME/bin:$PATH"
+export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
 
 export PLAN_ROOT=/home/thahoa/PET/ViMed/vimed_petct_atlas_finetune_plan
 export PILLAR_ROOT=/home/thahoa/PET/Pillar-0/pillar-finetune
