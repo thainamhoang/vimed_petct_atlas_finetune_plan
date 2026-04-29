@@ -66,8 +66,6 @@ class MultilabelMetric(AbstractMetric):
 
             positives = int(y.sum().item())
             negatives = int((y == 0).sum().item())
-            stats[f"{name}_positives"] = torch.tensor(float(positives), device=target.device)
-            stats[f"{name}_prevalence"] = torch.tensor(float(positives / max(len(y), 1)), device=target.device)
 
             if positives > 0 and negatives > 0:
                 label_auroc = auroc(p, y, task="binary")
