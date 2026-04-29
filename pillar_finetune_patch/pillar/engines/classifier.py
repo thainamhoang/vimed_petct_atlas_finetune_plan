@@ -128,8 +128,8 @@ class Classifier(Engine):
             # If there are no epoch metrics configured, we will not save results to `training_step_outputs`
             if epoch_metrics_configured:
                 # logging is not synchronized across processes
-                logging_dict = prefix_dict(logging_dict, "train_")
-                logging_dict["train_loss"] = loss.detach()
+                logging_dict = prefix_dict(logging_dict, "train/")
+                logging_dict["train/loss"] = loss.detach()
 
                 result["logs"] = logging_dict
 
@@ -191,7 +191,7 @@ class Classifier(Engine):
             torch.cuda.empty_cache()
 
             # log metrics
-            result["logs"] = {f"{split}_loss": loss.detach().cpu()}
+            result["logs"] = {f"{split}/loss": loss.detach().cpu()}
             if gather_predictions:
                 # We need to gather the predictions if we use Multi-GPU eval
                 predictions_dict = gather_predictions_dict(predictions_dict)
@@ -205,7 +205,7 @@ class Classifier(Engine):
             torch.cuda.empty_cache()
 
         if get_is_master() and not self.args.main.disable_wandb:
-            wandb.log({f"{split}_loss": loss.detach().cpu()}, step=self.global_step)
+            wandb.log({f"{split}/loss": loss.detach().cpu()}, step=self.global_step)
             if log_loss_components == True:
                 for k, v in logging_dict.items():
                     wandb.log({k: v}, step=self.global_step)

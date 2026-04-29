@@ -16,7 +16,7 @@ main:
   wandb_entity: null
 
   ckpt_freq: 1
-  monitor: val_macro_auroc
+  monitor: val/macro_auroc
 
   allow_overwriting_experiment_checkpoints: True
   find_unused_parameters: True

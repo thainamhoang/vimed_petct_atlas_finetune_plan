@@ -34,6 +34,15 @@ def resolve_loss_class(name):
     raise KeyError(name)
 
 
+def tensor_to_csv_strings(value):
+    if not isinstance(value, torch.Tensor):
+        return value
+    tensor = value.detach().cpu()
+    if tensor.dtype == torch.bfloat16:
+        tensor = tensor.float()
+    return [str(x) for x in tensor.numpy()]
+
+
 def parse_amp_precision(precision):
     parse = {
         "bf16-mixed": torch.bfloat16,
@@ -223,18 +232,14 @@ class Engine(object):
             logger.info(f"Saving {split} outputs to {ckpt_dir}/{epoch}/{split}.pth")
             torch.save(outputs, f"{ckpt_dir}/{epoch}/{split}.pth")
 
-            output_dict = {
-                key: [str(x) for x in value.cpu().numpy()] if isinstance(value, torch.Tensor) else value
-                for key, value in outputs.items()
-                if key != "logs"
-            }
+            output_dict = {key: tensor_to_csv_strings(value) for key, value in outputs.items() if key != "logs"}
             pd.DataFrame(output_dict).to_csv(f"{ckpt_dir}/{epoch}/{split}.csv", index=False)
 
         epoch_metrics = self.compute_epoch_metrics(
             outputs,
             self.args,
             device,
-            key_prefix=f"{split}_",
+            key_prefix=f"{split}/",
             epoch=epoch,
             split=split,
             epoch_metrics=epoch_metrics,
