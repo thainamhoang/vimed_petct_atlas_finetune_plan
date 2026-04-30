@@ -9,17 +9,27 @@ fi
 PLAN_ROOT="$1"
 PILLAR_ROOT="$2"
 
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/datasets/vimed_petct.py" "${PILLAR_ROOT}/pillar/datasets/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/datasets/__init__.py" "${PILLAR_ROOT}/pillar/datasets/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/engines/base.py" "${PILLAR_ROOT}/pillar/engines/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/engines/classifier.py" "${PILLAR_ROOT}/pillar/engines/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/losses/multilabel.py" "${PILLAR_ROOT}/pillar/losses/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/losses/__init__.py" "${PILLAR_ROOT}/pillar/losses/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/models/multi_stage.py" "${PILLAR_ROOT}/pillar/models/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/models/backbones/mmatlas.py" "${PILLAR_ROOT}/pillar/models/backbones/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/metrics/multilabel.py" "${PILLAR_ROOT}/pillar/metrics/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/pillar/metrics/__init__.py" "${PILLAR_ROOT}/pillar/metrics/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/configs/vimed_chest_petct_atlas.yaml" "${PILLAR_ROOT}/configs/"
-cp "${PLAN_ROOT}/pillar_finetune_patch/scripts/train.py" "${PILLAR_ROOT}/scripts/"
+if ! command -v rsync >/dev/null 2>&1; then
+  echo "rsync is required but not found in PATH" >&2
+  exit 1
+fi
+
+mkdir -p \
+  "${PILLAR_ROOT}/pillar/datasets" \
+  "${PILLAR_ROOT}/pillar/engines" \
+  "${PILLAR_ROOT}/pillar/losses" \
+  "${PILLAR_ROOT}/pillar/models" \
+  "${PILLAR_ROOT}/pillar/models/backbones" \
+  "${PILLAR_ROOT}/pillar/metrics" \
+  "${PILLAR_ROOT}/configs" \
+  "${PILLAR_ROOT}/scripts"
+
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/pillar/datasets/" "${PILLAR_ROOT}/pillar/datasets/"
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/pillar/engines/" "${PILLAR_ROOT}/pillar/engines/"
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/pillar/losses/" "${PILLAR_ROOT}/pillar/losses/"
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/pillar/models/" "${PILLAR_ROOT}/pillar/models/"
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/pillar/metrics/" "${PILLAR_ROOT}/pillar/metrics/"
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/configs/" "${PILLAR_ROOT}/configs/"
+rsync -a "${PLAN_ROOT}/pillar_finetune_patch/scripts/" "${PILLAR_ROOT}/scripts/"
 
 echo "Applied ViMED chest PET/CT patch into ${PILLAR_ROOT}"
