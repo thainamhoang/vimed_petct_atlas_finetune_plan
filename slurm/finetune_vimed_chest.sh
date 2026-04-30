@@ -15,14 +15,12 @@ log() {
   echo "[$(date)] $*"
 }
 
-module load miniforge3 dev2025a cmake cuda h100
-
-eval "$(mamba shell hook --shell bash)"
-mamba activate runai
+module load miniforge3 cuda h100 dev2025a cmake
 
 export CUDA_HOME=$(dirname $(dirname $(which nvcc)))
 export PATH="$CUDA_HOME/bin:$PATH"
 export LD_LIBRARY_PATH="$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+export LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH:-}"
 
 export PLAN_ROOT=/home/thahoa/PET/ViMed/vimed_petct_atlas_finetune_plan
 export PILLAR_ROOT=/home/thahoa/PET/Pillar-0/pillar-finetune
@@ -32,6 +30,9 @@ export HUGGINGFACE_HUB_CACHE=/scratch/thahoa/.cache/huggingface/hub
 export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK}
 export NUMEXPR_NUM_THREADS=${SLURM_CPUS_PER_TASK}
+
+eval "$(mamba shell hook --shell bash)"
+mamba activate runai
 
 mkdir -p "${HF_HOME}" "${HUGGINGFACE_HUB_CACHE}" /home/thahoa/PET/ViMed/finetune_logs
 

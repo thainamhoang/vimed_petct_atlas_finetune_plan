@@ -60,6 +60,8 @@ from pillar.utils.misc import (
     get_is_master,
 )
 
+torch.backends.cuda.enable_cudnn_sdp(False)
+
 
 def set_seed(seed):
     """Set random seed for reproducibility."""
