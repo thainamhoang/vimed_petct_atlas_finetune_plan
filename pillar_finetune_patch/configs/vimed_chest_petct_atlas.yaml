@@ -1,10 +1,10 @@
 experiment:
-  name: ViMED_Chest_PETCT_Atlas
-  tags: ["vimed", "petct", "atlas", "chest", "multilabel"]
-  notes: "Fine-tuning Pillar0-ChestCT on ViMED chest PET/CT weak labels."
+  name: ViMED_Chest_PETCT_Atlas_v2
+  tags: ["vimed", "petct", "atlas", "chest", "multilabel", "v2"]
+  notes: "Fine-tuning Pillar0-ChestCT on ViMED chest PET/CT weak labels with reduced overfitting pressure."
 
 main:
-  exp_name: ViMED_Chest_PETCT_Atlas
+  exp_name: ViMED_Chest_PETCT_Atlas_v2
   seed: 42
   log_dir: ./logs
   checkpoints_dir: ./logs/vimed
@@ -29,7 +29,7 @@ main:
 
 engine:
   type: Classifier
-  max_epochs: 20
+  max_epochs: 8
   kwargs:
     resume: null
     accumulate_grad_batches: 1
@@ -99,7 +99,7 @@ model:
         kwargs:
           input_dim: 1152
           output_dim: 8
-          dropout_rate: 0.1
+          dropout_rate: 0.2
         apply_pooling: True
         use_pooled_features: False
         enable_at_eval: True
@@ -107,8 +107,8 @@ model:
 optimizer:
   type: AdamW
   kwargs:
-    lr: 1.0e-5
-    weight_decay: 0.01
+    lr: 5.0e-6
+    weight_decay: 0.03
 
   scheduler:
     interval: epoch
@@ -117,7 +117,7 @@ optimizer:
     kwargs:
       min_lr: 1.0e-6
       warmup_epochs: 2
-      max_epochs: 20
+      max_epochs: 8
 
   layer_decay: 0.9
 
