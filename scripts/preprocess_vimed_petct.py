@@ -23,7 +23,7 @@ import torch.nn.functional as F
 
 
 REGION_KEYS = ("head_neck", "chest", "abdomen_pelvis")
-REGION_DEPTHS = {"head_neck": 128, "chest": 256, "abdomen_pelvis": 256}
+REGION_DEPTHS = {"head_neck": 64, "chest": 64, "abdomen_pelvis": 192}
 REGION_REPORT_KEYS = {
     "head_neck": "head_neck",
     "chest": "chest",
@@ -34,14 +34,14 @@ REGION_REPORT_KEYS = {
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--data-root", type=Path, required=True, help="ViMED data root containing metadata.csv")
-    p.add_argument("--metadata", default="metadata.csv")
+    p.add_argument("--metadata", default="metadata_with_ct_pet_minmax.csv")
     p.add_argument("--out-dir", type=Path, required=True)
     p.add_argument("--label-rules", type=Path, required=True)
     p.add_argument("--regions", nargs="+", default=list(REGION_KEYS), choices=REGION_KEYS)
     p.add_argument("--target-size", type=int, default=256)
-    p.add_argument("--head-neck-depth", type=int, default=128)
-    p.add_argument("--chest-depth", type=int, default=256)
-    p.add_argument("--abdomen-pelvis-depth", type=int, default=256)
+    p.add_argument("--head-neck-depth", type=int, default=64)
+    p.add_argument("--chest-depth", type=int, default=64)
+    p.add_argument("--abdomen-pelvis-depth", type=int, default=192)
     p.add_argument("--overlap-slices", type=int, default=20)
     p.add_argument("--shard-index", type=int, default=0)
     p.add_argument("--num-shards", type=int, default=1)
@@ -105,7 +105,12 @@ def resize_inplane(volume: np.ndarray, target_size: int, mode: str) -> np.ndarra
     if volume.shape[-2:] == (target_size, target_size):
         return np.ascontiguousarray(volume)
     tensor = torch.from_numpy(np.ascontiguousarray(volume)).float().unsqueeze(1)
-    resized = F.interpolate(tensor, size=(target_size, target_size), mode=mode, align_corners=False)
+    # Area mode is preferred for the exact 512->256 CT downsampling because it
+    # behaves like anti-aliased block averaging during pure downsampling.
+    if mode == "area":
+        resized = F.interpolate(tensor, size=(target_size, target_size), mode=mode)
+    else:
+        resized = F.interpolate(tensor, size=(target_size, target_size), mode=mode, align_corners=False)
     return resized.squeeze(1).cpu().numpy()
 
 
@@ -191,7 +196,7 @@ def process_study(
         depth = min(ct.shape[0], pet.shape[0])
         ct = ct[:depth]
         pet = pet[:depth]
-        ct = normalize_ct(resize_inplane(ct, args.target_size, mode="bilinear"))
+        ct = normalize_ct(resize_inplane(ct, args.target_size, mode="area"))
         pet = normalize_pet(resize_inplane(pet, args.target_size, mode="bilinear"))
 
         manifest_rows = []
@@ -228,6 +233,7 @@ def process_study(
                             "ct_path": str(ct_path),
                             "pet_path": str(pet_path),
                             "report_en_path": str(report_path),
+                            "n_slices": row.get("n_slices", ""),
                             "height": row.get("height", ""),
                             "weight": row.get("weight", ""),
                             "year": row.get("year", ""),
@@ -252,6 +258,7 @@ def process_study(
                 "weight": row.get("weight", ""),
                 "year": row.get("year", ""),
                 "report_text": report_text,
+                "n_slices": row.get("n_slices", ""),
             }
             out_row.update({name: labels[i] for i, name in enumerate(label_names)})
             manifest_rows.append(out_row)
@@ -300,6 +307,7 @@ def main() -> None:
         "weight",
         "year",
         "report_text",
+        "n_slices",
         *label_names,
     ]
     skipped_fieldnames = ["study_id", "reason", "details", "traceback"]
